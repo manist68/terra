@@ -1,5 +1,5 @@
 variable "prefix" {
-  default = "VMtestin3"
+  default = "MStest"
 }
 
 locals {
@@ -19,10 +19,10 @@ terraform {
     } 
   } 
     backend "azurerm" {   
-        resource_group_name  = "nt-poc-akshaya"
-        storage_account_name = "sinkstrgadf" 
-        container_name       = "terra" 
-        key                  = "ntwg/terraform.tfstate" 
+        resource_group_name  = azurerm_resource_group.MStest.name
+        storage_account_name = azurerm_resource_group.MStest.location
+        container_name       = "terra"  
+        key                  = "nt/terraform.tfstate" 
     } 
 } 
 
