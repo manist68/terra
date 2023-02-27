@@ -18,10 +18,10 @@ terraform {
       version = "=2.46.0" 
     } 
   } 
-    backend "azurerm" {   
-        resource_group_name  = azurerm_resource_group.MStest.name
-        storage_account_name = azurerm_resource_group.MStest.location
-        container_name       = "terra"  
+        backend "azurerm" {   
+        resource_group_name  = "nt-poc-akshaya"
+        storage_account_name = "sinkstrgadf" 
+        container_name       = "terra" 
         key                  = "nt/terraform.tfstate" 
     } 
 } 
@@ -29,8 +29,8 @@ data "terraform_remote_state" "rg" {
   backend = "azurerm"
 
   config = {
-        resource_group_name  = azurerm_resource_group.MStest.name
-        storage_account_name = azurerm_resource_group.MStest.location
+        resource_group_name  = "nt-poc-akshaya"
+        storage_account_name = "sinkstrgadf" 
         container_name       = "terra"  
         key                  = "rg/terraform.tfstate"  
   }
