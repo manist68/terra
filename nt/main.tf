@@ -2,9 +2,6 @@ variable "prefix" {
   default = "MStest"
 }
 
-locals {
-  vm_name = "${var.prefix}-vm"
-}
 
 provider "azurerm" {
   skip_provider_registration = "true"
@@ -36,27 +33,26 @@ data "terraform_remote_state" "rg" {
   }
 }
 
-
 resource "azurerm_virtual_network" "MStest" {
-  name                = "${var.prefix}-nnetwork"
+  name                = "${var.prefix}-network"
   address_space       = ["192.168.0.0/16"]
-  location            = data.terraform_remote_state.rg.outputs.location
-  resource_group_name = data.terraform_remote_state.rg.outputs.name
+  location            = data.terraform_remote_state.rg.outputs.resource_group_region
+  resource_group_name = data.terraform_remote_state.rg.outputs.resource_group_name
 }
 
 resource "azurerm_subnet" "MStest" {
   name                 = "MStest"
-  resource_group_name  = data.terraform_remote_state.rg.outputs.name
+  resource_group_name = data.terraform_remote_state.rg.outputs.resource_group_name
   virtual_network_name = azurerm_virtual_network.MStest.name
   address_prefixes     = ["192.168.2.0/24"]
 }
 
-output "resource_group_name" {
-  value = azurerm_resource_group.MStest.name
-}
-output "resource_group_region" {
-  value = azurerm_resource_group.MStest.location
-}
+# output "resource_group_name" {
+#   value = azurerm_resource_group.MStest.name
+# }
+# output "resource_group_region" {
+#   value = azurerm_resource_group.MStest.location
+# }
 output "virtual_network_name" {
   value = azurerm_virtual_network.MStest.name
 }
