@@ -18,11 +18,11 @@ terraform {
     } 
   } 
     backend "azurerm" {   
-        resource_group_name  = azurerm_resource_group.MStest.name
-        storage_account_name = azurerm_resource_group.MStest.location
+        resource_group_name  = "nt-poc-akshaya"
+        storage_account_name = "sinkstrgadf" 
         container_name       = "terra" 
         key                  = "rg/terraform.tfstate" 
-    }
+    } 
 } 
 
 
