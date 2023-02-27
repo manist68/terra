@@ -14,8 +14,8 @@ terraform {
     } 
   } 
     backend "azurerm" {   
-        resource_group_name  = azurerm_resource_group.MStest.name
-        storage_account_name = azurerm_resource_group.MStest.location
+        resource_group_name  = "nt-poc-akshaya"
+        storage_account_name = "sinkstrgadf" 
         container_name       = "terra" 
         key                  = "vm/terraform.tfstate" 
     } 
@@ -24,8 +24,8 @@ terraform {
 data "terraform_remote_state" "rg" {  
     backend = "azurerm" 
     config = {  
-        resource_group_name  = azurerm_resource_group.MStest.name
-        storage_account_name = azurerm_resource_group.MStest.location
+        resource_group_name  = "nt-poc-akshaya"
+        storage_account_name = "sinkstrgadf" 
         container_name       = "terra" 
         key                  = "rg/terraform.tfstate" 
     } 
@@ -35,10 +35,10 @@ data "terraform_remote_state" "rg" {
 data "terraform_remote_state" "ntw" {  
     backend = "azurerm" 
     config = {  
-        resource_group_name  = azurerm_resource_group.MStest.name
-        storage_account_name = azurerm_resource_group.MStest.location
+        resource_group_name  = "nt-poc-akshaya"
+        storage_account_name = "sinkstrgadf" 
         container_name       = "terra" 
-        key                  = "rg/terraform.tfstate" 
+        key                  = "nt/terraform.tfstate" 
     } 
 
  }
