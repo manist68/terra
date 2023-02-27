@@ -47,7 +47,7 @@ resource "azurerm_virtual_network" "MStest" {
 resource "azurerm_subnet" "MStest" {
   name                 = "MStest"
   resource_group_name  = data.terraform_remote_state.rg.outputs.name
-  virtual_network_name = azurerm_virtual_network.VMtest.name
+  virtual_network_name = azurerm_virtual_network.MStest.name
   address_prefixes     = ["192.168.2.0/24"]
 }
 
