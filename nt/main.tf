@@ -25,46 +25,46 @@ terraform {
         key                  = "nt/terraform.tfstate" 
     } 
 } 
+data "terraform_remote_state" "rg" {
+  backend = "azurerm"
 
-
-resource "azurerm_resource_group" "VMtest" {
-  name     = "${var.prefix}-resources"
-  location = "West Europe"
-
-  tags = {
-    name        = "mani"
-    environment = "testing"
+  config = {
+        resource_group_name  = azurerm_resource_group.MStest.name
+        storage_account_name = azurerm_resource_group.MStest.location
+        container_name       = "terra"  
+        key                  = "rg/terraform.tfstate"  
   }
 }
 
-resource "azurerm_virtual_network" "VMtest" {
+
+resource "azurerm_virtual_network" "MStest" {
   name                = "${var.prefix}-nnetwork"
   address_space       = ["192.168.0.0/16"]
-  location            = azurerm_resource_group.VMtest.location
-  resource_group_name = azurerm_resource_group.VMtest.name
+  location            = data.terraform_remote_state.rg.outputs.location
+  resource_group_name = data.terraform_remote_state.rg.outputs.name
 }
 
-resource "azurerm_subnet" "VMtest" {
-  name                 = "vmtest"
-  resource_group_name  = azurerm_resource_group.VMtest.name
+resource "azurerm_subnet" "MStest" {
+  name                 = "MStest"
+  resource_group_name  = data.terraform_remote_state.rg.outputs.name
   virtual_network_name = azurerm_virtual_network.VMtest.name
   address_prefixes     = ["192.168.2.0/24"]
 }
 
 output "resource_group_name" {
-  value = azurerm_resource_group.VMtest.name
+  value = azurerm_resource_group.MStest.name
 }
 output "resource_group_region" {
-  value = azurerm_resource_group.VMtest.location
+  value = azurerm_resource_group.MStest.location
 }
 output "virtual_network_name" {
-  value = azurerm_virtual_network.VMtest.name
+  value = azurerm_virtual_network.MStest.name
 }
 
 output "subnet_id" {
-  value = azurerm_subnet.VMtest.id
+  value = azurerm_subnet.MStest.id
 }
 
 output "vnet_id" {
-  value = azurerm_virtual_network.VMtest.id
+  value = azurerm_virtual_network.MStest.id
 }
