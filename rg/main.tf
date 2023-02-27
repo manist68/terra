@@ -1,5 +1,5 @@
 variable "prefix" {
-  default = "MStesting"
+  default = "MStest"
 }
 variable "location"{
   default = "West Europe"
@@ -59,4 +59,3 @@ output "resource_group_name" {
 output "resource_group_region" {
   value = azurerm_resource_group.MStest.location
 }
-
