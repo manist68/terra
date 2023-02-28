@@ -92,15 +92,15 @@ resource "azurerm_network_security_group" "vm_nsg" {
 
 resource "azurerm_public_ip" "vm_publicIP" {
     name                         = "MStest-pubip"
-    location                     = data.terraform_remote_state.ntw.outputs.resource_group_region
-    resource_group_name          = data.terraform_remote_state.ntw.outputs.resource_group_name
+    location                     = data.terraform_remote_state.rg.outputs.resource_group_region
+    resource_group_name          = data.terraform_remote_state.rg.outputs.resource_group_name
     allocation_method            = "Dynamic"
 }
 
 resource "azurerm_network_interface" "nai_vm_nic" {
   name                = "MStest-nic"
-  location            = data.terraform_remote_state.ntw.outputs.resource_group_region
-  resource_group_name = data.terraform_remote_state.ntw.outputs.resource_group_name
+  location            = data.terraform_remote_state.rg.outputs.resource_group_region
+  resource_group_name = data.terraform_remote_state.rg.outputs.resource_group_name
 
   ip_configuration {
     name                          = "internal"
@@ -118,8 +118,8 @@ resource "azurerm_network_interface_security_group_association" "nic_nsg_link" {
 
 resource "azurerm_virtual_machine" "MStest" {
   name                  = local.vm_name
-  location              = data.terraform_remote_state.ntw.outputs.resource_group_region
-  resource_group_name   = data.terraform_remote_state.ntw.outputs.resource_group_name
+  location              = data.terraform_remote_state.rg.outputs.resource_group_region
+  resource_group_name   = data.terraform_remote_state.rg.outputs.resource_group_name
   network_interface_ids =  [
     azurerm_network_interface.nai_vm_nic.id,
   ]
@@ -155,8 +155,8 @@ resource "azurerm_virtual_machine" "MStest" {
 
 resource "azurerm_managed_disk" "MStest" {
   name                 = "${local.vm_name}-datadrive"
-  location             = data.terraform_remote_state.ntw.outputs.resource_group_region
-  resource_group_name  = data.terraform_remote_state.ntw.outputs.resource_group_name
+  location             = data.terraform_remote_state.rg.outputs.resource_group_region
+  resource_group_name  = data.terraform_remote_state.rg.outputs.resource_group_name
   storage_account_type = "Standard_LRS"
   create_option        = "Empty"
   disk_size_gb         = 100
