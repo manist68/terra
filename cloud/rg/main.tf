@@ -1,5 +1,5 @@
 variable "prefix" {
-  default = "MStesting"
+  default = "MStest"
 }
 variable "location"{
   default = "West Europe"
@@ -47,6 +47,11 @@ resource "azurerm_storage_account" "MStest" {
     environment = "staging"
   }
 }
+resource "azurerm_storage_container" "MStest" {
+  name                  = "terra"
+  storage_account_name  = azurerm_storage_account.MStest.name
+  container_access_type = "private"
+}
 
 output "resource_group_name" {
   value = azurerm_resource_group.MStest.name
@@ -54,4 +59,3 @@ output "resource_group_name" {
 output "resource_group_region" {
   value = azurerm_resource_group.MStest.location
 }
-
