@@ -24,10 +24,10 @@ terraform {
 data "terraform_remote_state" "rg" {  
     backend = "azurerm" 
     config = {  
-        resource_group_name  = "nt-poc-akshaya" 
+        resource_group_name  = "nt-poc-akshaya"
         storage_account_name = "sinkstrgadf" 
         container_name       = "terra" 
-        key                  = "rg/terraform.tfstate"
+        key                  = "rg/terraform.tfstate" 
     } 
 
  }
@@ -35,10 +35,10 @@ data "terraform_remote_state" "rg" {
 data "terraform_remote_state" "ntw" {  
     backend = "azurerm" 
     config = {  
-        resource_group_name  = "nt-poc-akshaya" 
+        resource_group_name  = "nt-poc-akshaya"
         storage_account_name = "sinkstrgadf" 
         container_name       = "terra" 
-        key                  = "ntwg/terraform.tfstate"
+        key                  = "nt/terraform.tfstate" 
     } 
 
  }
@@ -51,8 +51,8 @@ provider "azurerm" {
 ## Create Network Security Group and rule
 resource "azurerm_network_security_group" "vm_nsg" {
   name                = "MStest-nsg"
-  location            = data.terraform_remote_state.ntw.outputs.resource_group_region
-  resource_group_name = data.terraform_remote_state.ntw.outputs.resource_group_name
+  location            = data.terraform_remote_state.rg.outputs.resource_group_region
+  resource_group_name = data.terraform_remote_state.rg.outputs.resource_group_name
 
   security_rule {
     name                       = "SSH"
@@ -92,15 +92,15 @@ resource "azurerm_network_security_group" "vm_nsg" {
 
 resource "azurerm_public_ip" "vm_publicIP" {
     name                         = "MStest-pubip"
-    location                     = data.terraform_remote_state.ntw.outputs.resource_group_region
-    resource_group_name          = data.terraform_remote_state.ntw.outputs.resource_group_name
+    location                     = data.terraform_remote_state.rg.outputs.resource_group_region
+    resource_group_name          = data.terraform_remote_state.rg.outputs.resource_group_name
     allocation_method            = "Dynamic"
 }
 
 resource "azurerm_network_interface" "nai_vm_nic" {
   name                = "MStest-nic"
-  location            = data.terraform_remote_state.ntw.outputs.resource_group_region
-  resource_group_name = data.terraform_remote_state.ntw.outputs.resource_group_name
+  location            = data.terraform_remote_state.rg.outputs.resource_group_region
+  resource_group_name = data.terraform_remote_state.rg.outputs.resource_group_name
 
   ip_configuration {
     name                          = "internal"
@@ -116,10 +116,10 @@ resource "azurerm_network_interface_security_group_association" "nic_nsg_link" {
 }
 
 
-resource "azurerm_virtual_machine" "VMtest" {
+resource "azurerm_virtual_machine" "MStest" {
   name                  = local.vm_name
-  location              = data.terraform_remote_state.ntw.outputs.resource_group_region
-  resource_group_name   = data.terraform_remote_state.ntw.outputs.resource_group_name
+  location              = data.terraform_remote_state.rg.outputs.resource_group_region
+  resource_group_name   = data.terraform_remote_state.rg.outputs.resource_group_name
   network_interface_ids =  [
     azurerm_network_interface.nai_vm_nic.id,
   ]
@@ -127,31 +127,65 @@ resource "azurerm_virtual_machine" "VMtest" {
   
   delete_os_disk_on_termination = true
 
-
   storage_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
+    sku       = "18.04-LTS"
     version   = "latest"
   }
+
+
   storage_os_disk {
-    name              = "myosdisk1"
+    name              = "myosdisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
+
   os_profile {
-    computer_name  = "hostname"
-    admin_username = "testadmin"
+    computer_name  = local.vm_name
+    admin_username = "azureuser"
     admin_password = "Password1234!"
   }
+
   os_profile_linux_config {
     disable_password_authentication = false
   }
-  tags = {
-    environment = "staging"
-  }
 }
+
+resource "azurerm_managed_disk" "MStest" {
+  name                 = "${local.vm_name}-datadrive"
+  location             = data.terraform_remote_state.rg.outputs.resource_group_region
+  resource_group_name  = data.terraform_remote_state.rg.outputs.resource_group_name
+  storage_account_type = "Standard_LRS"
+  create_option        = "Empty"
+  disk_size_gb         = 100
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "MStest" {
+  managed_disk_id    = azurerm_managed_disk.MStest.id
+  virtual_machine_id = azurerm_virtual_machine.MStest.id
+  lun                = 10
+  caching            = "ReadWrite"
+}
+
+resource "azurerm_virtual_machine_extension" "mount_Disk" {
+  name                 = join("-", ["mount_Disk", formatdate("YYYYMMDDhhmm", timestamp())] )
+  virtual_machine_id = azurerm_virtual_machine.MStest.id
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "CustomScript"
+  type_handler_version = "2.0"
+
+  settings = <<SETTINGS
+    {
+        "script": "${filebase64("mountdisk.sh")}"
+    }
+SETTINGS
+  depends_on = [
+    azurerm_virtual_machine_data_disk_attachment.MStest
+  ]
+}
+
 output "public_ip" {
   value = azurerm_public_ip.vm_publicIP.ip_address
 }
