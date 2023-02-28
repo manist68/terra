@@ -28,6 +28,9 @@ sudo ufw app list
 sudo ufw allow ‘Nginx Full’
 sudo ufw allow OpenSSH
 
+#java
+
+sudo apt install openjdk-11-jdk-headless -y
 
 #Mongo
 
