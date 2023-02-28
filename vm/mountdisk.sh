@@ -23,7 +23,7 @@ sudo apt-get install -y nodejs
 # sudo apt update && sudo apt install -y mongodb-org
 
 #java
-sudo apt install openjdk-8-jdk-headless 
+sudo apt install openjdk-8-jdk-headless -y
 
 #NGINX
 sudo apt-get install nginx
