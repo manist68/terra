@@ -11,8 +11,7 @@ sudo mount /dev/sd${drive}1 /datadrive
 sudo echo UUID=\"`(blkid /dev/sd${drive}1 -s UUID -o value)`\" /datadrive       xfs     defaults,nofail         1       2 >> /etc/fstab
 sudo chown azureuser:azureuser /datadrive
 
-#java
-sudo apt install openjdk-8-jdk-headless 
+
 
 #NODE.js
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
@@ -22,6 +21,9 @@ sudo apt-get install -y nodejs
 # sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
 # echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
 # sudo apt update && sudo apt install -y mongodb-org
+
+#java
+sudo apt install openjdk-8-jdk-headless 
 
 #NGINX
 sudo apt-get install nginx
