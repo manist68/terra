@@ -115,42 +115,48 @@ resource "azurerm_network_interface_security_group_association" "nic_nsg_link" {
   network_security_group_id = azurerm_network_security_group.vm_nsg.id
 }
 
+# Create (and display) an SSH key
+resource "tls_private_key" "vm_ssh" {
+    algorithm = "RSA"
+    rsa_bits = 4096
+}
 
-resource "azurerm_virtual_machine" "MStest" {
+resource "local_file" "pem_key_file" {
+    content  = tls_private_key.vm_ssh.private_key_pem
+    filename = "${path.module}/key.pem"
+}
+
+# Create virtual machine
+resource "azurerm_linux_virtual_machine" "MStest" {
   name                  = local.vm_name
   location              = data.terraform_remote_state.rg.outputs.resource_group_region
   resource_group_name   = data.terraform_remote_state.rg.outputs.resource_group_name
   network_interface_ids =  [
     azurerm_network_interface.nai_vm_nic.id,
   ]
-  vm_size               = "Standard_F4"
+  size                  = "Standard_DS1_v2"
   
-  delete_os_disk_on_termination = true
 
-  storage_image_reference {
+  source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
+    sku       = "18_04-lts-gen2"
     version   = "latest"
   }
-
-
-  storage_os_disk {
-    name              = "myosdisk"
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+    name = "myosdisk"
   }
+  computer_name                   = local.vm_name
+  admin_username                  = "azureuser"
+  disable_password_authentication = true
 
-  os_profile {
-    computer_name  = local.vm_name
-    admin_username = "azureuser"
-    admin_password = "Password1234!"
+  admin_ssh_key {
+    username   = "azureuser"
+    public_key = tls_private_key.vm_ssh.public_key_openssh
   }
-
-  os_profile_linux_config {
-    disable_password_authentication = false
-  }
+ 
 }
 
 resource "azurerm_managed_disk" "MStest" {
@@ -164,14 +170,14 @@ resource "azurerm_managed_disk" "MStest" {
 
 resource "azurerm_virtual_machine_data_disk_attachment" "MStest" {
   managed_disk_id    = azurerm_managed_disk.MStest.id
-  virtual_machine_id = azurerm_virtual_machine.MStest.id
+  virtual_machine_id = azurerm_linux_virtual_machine.MStest.id
   lun                = 10
   caching            = "ReadWrite"
 }
 
 resource "azurerm_virtual_machine_extension" "mount_Disk" {
   name                 = join("-", ["mount_Disk", formatdate("YYYYMMDDhhmm", timestamp())] )
-  virtual_machine_id = azurerm_virtual_machine.MStest.id
+  virtual_machine_id = azurerm_linux_virtual_machine.MStest.id
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
   type_handler_version = "2.0"
