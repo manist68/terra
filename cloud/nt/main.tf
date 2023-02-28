@@ -1,10 +1,7 @@
 variable "prefix" {
-  default = "VMtestin3"
+  default = "MStest"
 }
 
-locals {
-  vm_name = "${var.prefix}-vm"
-}
 
 provider "azurerm" {
   skip_provider_registration = "true"
@@ -18,53 +15,52 @@ terraform {
       version = "=2.46.0" 
     } 
   } 
-    backend "azurerm" {   
+        backend "azurerm" {   
         resource_group_name  = "nt-poc-akshaya"
         storage_account_name = "sinkstrgadf" 
         container_name       = "terra" 
-        key                  = "ntwg/terraform.tfstate" 
+        key                  = "nt/terraform.tfstate" 
     } 
 } 
+data "terraform_remote_state" "rg" {
+  backend = "azurerm"
 
-
-resource "azurerm_resource_group" "VMtest" {
-  name     = "${var.prefix}-resources"
-  location = "West Europe"
-
-  tags = {
-    name        = "mani"
-    environment = "testing"
+  config = {
+        resource_group_name  = "nt-poc-akshaya"
+        storage_account_name = "sinkstrgadf" 
+        container_name       = "terra"  
+        key                  = "rg/terraform.tfstate"  
   }
 }
 
-resource "azurerm_virtual_network" "VMtest" {
-  name                = "${var.prefix}-nnetwork"
+resource "azurerm_virtual_network" "MStest" {
+  name                = "${var.prefix}-network"
   address_space       = ["192.168.0.0/16"]
-  location            = azurerm_resource_group.VMtest.location
-  resource_group_name = azurerm_resource_group.VMtest.name
+  location            = data.terraform_remote_state.rg.outputs.resource_group_region
+  resource_group_name = data.terraform_remote_state.rg.outputs.resource_group_name
 }
 
-resource "azurerm_subnet" "VMtest" {
-  name                 = "vmtest"
-  resource_group_name  = azurerm_resource_group.VMtest.name
-  virtual_network_name = azurerm_virtual_network.VMtest.name
+resource "azurerm_subnet" "MStest" {
+  name                 = "MStest"
+  resource_group_name = data.terraform_remote_state.rg.outputs.resource_group_name
+  virtual_network_name = azurerm_virtual_network.MStest.name
   address_prefixes     = ["192.168.2.0/24"]
 }
 
-output "resource_group_name" {
-  value = azurerm_resource_group.VMtest.name
-}
-output "resource_group_region" {
-  value = azurerm_resource_group.VMtest.location
-}
+# output "resource_group_name" {
+#   value = azurerm_resource_group.MStest.name
+# }
+# output "resource_group_region" {
+#   value = azurerm_resource_group.MStest.location
+# }
 output "virtual_network_name" {
-  value = azurerm_virtual_network.VMtest.name
+  value = azurerm_virtual_network.MStest.name
 }
 
 output "subnet_id" {
-  value = azurerm_subnet.VMtest.id
+  value = azurerm_subnet.MStest.id
 }
 
 output "vnet_id" {
-  value = azurerm_virtual_network.VMtest.id
+  value = azurerm_virtual_network.MStest.id
 }
