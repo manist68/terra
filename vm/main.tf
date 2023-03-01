@@ -1,6 +1,5 @@
-
 variable "prefix" {
-  default = "MSlocal"
+  default = "MStest"
 }
 
 locals {
@@ -16,7 +15,7 @@ terraform {
     backend "azurerm" {   
         resource_group_name  = "nt-poc-akshaya"
         storage_account_name = "sinkstrgadf" 
-        container_name       = "sink" 
+        container_name       = "terra" 
         key                  = "vm/terraform.tfstate" 
     } 
 } 
@@ -26,7 +25,7 @@ data "terraform_remote_state" "rg" {
     config = {  
         resource_group_name  = "nt-poc-akshaya"
         storage_account_name = "sinkstrgadf" 
-        container_name       = "sink" 
+        container_name       = "terra" 
         key                  = "rg/terraform.tfstate" 
     } 
 
@@ -37,7 +36,7 @@ data "terraform_remote_state" "ntw" {
     config = {  
         resource_group_name  = "nt-poc-akshaya"
         storage_account_name = "sinkstrgadf" 
-        container_name       = "sink" 
+        container_name       = "terra" 
         key                  = "nt/terraform.tfstate" 
     } 
 
@@ -114,6 +113,7 @@ resource "azurerm_network_interface_security_group_association" "nic_nsg_link" {
   network_interface_id      = azurerm_network_interface.nai_vm_nic.id
   network_security_group_id = azurerm_network_security_group.vm_nsg.id
 }
+
 
 # Create virtual machine
 resource "azurerm_linux_virtual_machine" "MStest" {
