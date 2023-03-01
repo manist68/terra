@@ -1,6 +1,6 @@
 
 variable "prefix" {
-  default = "MStest"
+  default = "MSlocal"
 }
 
 locals {
@@ -16,7 +16,7 @@ terraform {
     backend "azurerm" {   
         resource_group_name  = "nt-poc-akshaya"
         storage_account_name = "sinkstrgadf" 
-        container_name       = "terra" 
+        container_name       = "sink" 
         key                  = "vm/terraform.tfstate" 
     } 
 } 
@@ -26,7 +26,7 @@ data "terraform_remote_state" "rg" {
     config = {  
         resource_group_name  = "nt-poc-akshaya"
         storage_account_name = "sinkstrgadf" 
-        container_name       = "terra" 
+        container_name       = "sink" 
         key                  = "rg/terraform.tfstate" 
     } 
 
@@ -37,7 +37,7 @@ data "terraform_remote_state" "ntw" {
     config = {  
         resource_group_name  = "nt-poc-akshaya"
         storage_account_name = "sinkstrgadf" 
-        container_name       = "terra" 
+        container_name       = "sink" 
         key                  = "nt/terraform.tfstate" 
     } 
 
@@ -115,17 +115,6 @@ resource "azurerm_network_interface_security_group_association" "nic_nsg_link" {
   network_security_group_id = azurerm_network_security_group.vm_nsg.id
 }
 
-# Create (and display) an SSH key
-resource "tls_private_key" "vm_ssh" {
-    algorithm = "RSA"
-    rsa_bits = 4096
-}
-
-resource "local_file" "pem_key_file" {
-    content  = tls_private_key.vm_ssh.private_key_pem
-    filename = "${path.module}/key.pem"
-}
-
 # Create virtual machine
 resource "azurerm_linux_virtual_machine" "MStest" {
   name                  = local.vm_name
@@ -148,14 +137,11 @@ resource "azurerm_linux_virtual_machine" "MStest" {
     storage_account_type = "Standard_LRS"
     name = "myosdisk"
   }
+  disable_password_authentication = false
   computer_name                   = local.vm_name
   admin_username                  = "azureuser"
-  disable_password_authentication = true
+  admin_password                  = "Password1234!"
 
-  admin_ssh_key {
-    username   = "azureuser"
-    public_key = tls_private_key.vm_ssh.public_key_openssh
-  }
  
 }
 
