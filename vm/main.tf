@@ -123,7 +123,7 @@ resource "azurerm_linux_virtual_machine" "MStest" {
   network_interface_ids =  [
     azurerm_network_interface.nai_vm_nic.id,
   ]
-  size                  = "Standard_DS1_v2"
+  size                  = "Standard_E4as_v4"
   
 
   source_image_reference {
