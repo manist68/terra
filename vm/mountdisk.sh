@@ -50,6 +50,7 @@ source ~/.bashrc
 sleep 15
 alias brc='source ~/.bashrc'
 
+sudo apt install openjdk-8-jdk-headless -y
 
 sudo apt install jq -y
 
