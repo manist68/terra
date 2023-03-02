@@ -37,7 +37,7 @@ resource "azurerm_resource_group" "MStest" {
 }
 
 resource "azurerm_storage_account" "MStest" {
-  name                     = "storageaccountmstest3"
+  name                     = "storageaccountmstest5"
   resource_group_name      = azurerm_resource_group.MStest.name
   location                 = azurerm_resource_group.MStest.location
   account_tier             = "Standard"
