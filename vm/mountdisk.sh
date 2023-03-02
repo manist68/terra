@@ -45,9 +45,11 @@ sed -i "s/10.2.0.7/{$ip}/g" /datadrive/all_tomcat/apache-tomcat-drools-8.5/bin/s
 #setting up 
 
 cd /datadrive/; chmod -R 777 bashrc_set.sh; ./bashrc_set.sh
-source ~/.bashrc
 sleep 3
+source ~/.bashrc
+sleep 15
 alias brc='source ~/.bashrc'
+
 
 sudo apt install jq -y
 
