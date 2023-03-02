@@ -47,11 +47,11 @@ sed -i "s/10.2.0.7/{$ip}/g" /datadrive/all_tomcat/apache-tomcat-drools-8.5/bin/s
 cd /datadrive/; chmod -R 777 bashrc_set.sh; ./bashrc_set.sh
 sleep 3
 source ~/.bashrc
-sleep 15
+sleep 30
 alias brc='source ~/.bashrc'
-
+sleep 15
 sudo apt install openjdk-8-jdk-headless -y
-
+sleep 5
 sudo apt install jq -y
 
 # elastic search
