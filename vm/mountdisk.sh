@@ -45,7 +45,9 @@ sed -i "s/10.2.0.7/{$ip}/g" /datadrive/all_tomcat/apache-tomcat-drools-8.5/bin/s
 #setting up 
 
 cd /datadrive/; chmod -R 777 bashrc_set.sh; ./bashrc_set.sh
-
+source ~/.bashrc
+sleep 3
+alias brc='source ~/.bashrc'
 
 sudo apt install jq -y
 
@@ -61,7 +63,7 @@ cd /datadrive/; chmod -R 777 jupyternew.sh; ./jupyternew.sh
 #echo 'c.NotebookApp.ip = '\''10.10.1.68\''' >> /home/azureuser/.jupyter/jupyter_notebook_config.py
 
 # Python, R, sap
-cd /datadrive/; chmod -R 777 python_R_sap.sh; ./python_R_sap.sh
+#cd /datadrive/; chmod -R 777 python_R_sap.sh; ./python_R_sap.sh
 
 # Drool
 cd /datadrive/; chmod -R 777 Drool_Step_2.sh; ./Drool_Step_2.sh
