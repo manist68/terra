@@ -2,7 +2,7 @@ variable "prefix" {
   default = "MStest"
 }
 variable "location"{
-  default = "West Europe"
+  default = "Central India"
 }
 
 provider "azurerm" {
