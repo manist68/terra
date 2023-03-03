@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -i
 while [ `ls -l /dev/disk/azure/scsi1 | grep lun10 | wc -l` -lt 1 ]; do echo waiting on disks...; sleep 5; done
 str=$(ls -l /dev/disk/azure/scsi1 | grep lun10)
 drive=${str: -1}
