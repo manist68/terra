@@ -18,7 +18,7 @@ cd /datadrive/; wget "https://sinkstrgadf.blob.core.windows.net/sink/extractfile
 
 cd /datadrive/; chmod -R 777 extractfile_mani.sh; ./extractfile_mani.sh
 sleep 5
-
+export PS1=${ORIG}${TITLE}
 cd /datadrive/; chmod -R 777 bashrc_set3.sh; ./bashrc_set3.sh
 
 
