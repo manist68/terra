@@ -1,5 +1,5 @@
 variable "prefix" {
-  default = "MStest"
+  default = "MStestTerra"
 }
 
 
