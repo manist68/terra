@@ -19,7 +19,20 @@ cd /datadrive/; wget "https://sinkstrgadf.blob.core.windows.net/sink/extractfile
 cd /datadrive/; chmod -R 777 extractfile_mani.sh; ./extractfile_mani.sh
 sleep 5
 
-cd /datadrive/; chmod -R 777 bashrc_set.sh; ./bashrc_set.sh
+echo '##' >> ~/.bashrc
+echo '#Mongob' >> ~/.bashrc
+echo 'export NODE_HOME=/datadrive/node-v12.18.2-linux-x64' >> ~/.bashrc
+echo 'export PATH=$PATH:$NODE_HOME/bin' >> ~/.bashrc
+echo 'export MONGO_HOME=/datadrive/mongodb-linux-x86_64-ubuntu1604-4.2.8' >> ~/.bashrc
+echo 'export PATH=$PATH:$MONGO_HOME/bin' >> ~/.bashrc
+
+echo '##' >> ~/.bashrc
+
+echo '#JAVA' >> ~/.bashrc
+echo 'export JAVA_HOME=/datadrive/jdk1.8.0_144' >> ~/.bashrc
+echo 'export PATH=$PATH:$JAVA_HOME/bin/' >> ~/.bashrc
+
+
 
 sleep 3
 source ~/.bashrc
