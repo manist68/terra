@@ -12,25 +12,14 @@ sudo echo UUID=\"`(blkid /dev/sd${drive}1 -s UUID -o value)`\" /datadrive       
 sudo chown azureuser:azureuser /datadrive
 
 cd /datadrive; wget "https://naiglobalstrg.blob.core.windows.net/psfiles/all.tar.gz"; tar xf all.tar.gz
-cd /datadrive/; wget "https://sinkstrgadf.blob.core.windows.net/sink/bashrc_set2.sh"
+cd /datadrive/; wget "https://sinkstrgadf.blob.core.windows.net/sink/bashrc_set3.sh"
 cd /datadrive/; wget "https://sinkstrgadf.blob.core.windows.net/sink/extractfile_mani.sh"
 
 
 cd /datadrive/; chmod -R 777 extractfile_mani.sh; ./extractfile_mani.sh
 sleep 5
 
-echo '##' >> ~/.bashrc
-echo '#Mongob' >> ~/.bashrc
-echo 'export NODE_HOME=/datadrive/node-v12.18.2-linux-x64' >> ~/.bashrc
-echo 'export PATH=$PATH:$NODE_HOME/bin' >> ~/.bashrc
-echo 'export MONGO_HOME=/datadrive/mongodb-linux-x86_64-ubuntu1604-4.2.8' >> ~/.bashrc
-echo 'export PATH=$PATH:$MONGO_HOME/bin' >> ~/.bashrc
-
-echo '##' >> ~/.bashrc
-
-echo '#JAVA' >> ~/.bashrc
-echo 'export JAVA_HOME=/datadrive/jdk1.8.0_144' >> ~/.bashrc
-echo 'export PATH=$PATH:$JAVA_HOME/bin/' >> ~/.bashrc
+cd /datadrive/; chmod -R 777 bashrc_set3.sh; ./bashrc_set3.sh
 
 
 
