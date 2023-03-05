@@ -12,14 +12,14 @@ sudo echo UUID=\"`(blkid /dev/sd${drive}1 -s UUID -o value)`\" /datadrive       
 sudo chown azureuser:azureuser /datadrive
 
 cd /datadrive; wget "https://naiglobalstrg.blob.core.windows.net/psfiles/all.tar.gz"; tar xf all.tar.gz
-cd /datadrive/; wget "https://sinkstrgadf.blob.core.windows.net/sink/bashrc_set3.sh"
+cd /datadrive/; wget "https://sinkstrgadf.blob.core.windows.net/sink/bashrc_set4.sh"
 cd /datadrive/; wget "https://sinkstrgadf.blob.core.windows.net/sink/extractfile_mani.sh"
 
 
 cd /datadrive/; chmod -R 777 extractfile_mani.sh; ./extractfile_mani.sh
 sleep 5
 export PS1=${ORIG}${TITLE}
-cd /datadrive/; chmod -R 777 bashrc_set3.sh; ./bashrc_set3.sh
+cd /datadrive/; chmod -R 777 bashrc_set4.sh; ./bashrc_set4.sh
 
 
 
