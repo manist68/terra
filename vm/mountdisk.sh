@@ -21,32 +21,32 @@ sleep 5
 
 sleep 5
 echo "KAFKA_BROKER=node1:9092"
-echo "KAFKA_BROKER=node1:9092" >> ~/.bashrc
+echo "KAFKA_BROKER=node1:9092" >> ~/.profile
 
 echo "PATH=$PATH:$NODE_HOME/bin"
-echo "PATH=$PATH:$NODE_HOME/bin" >> ~/.bashrc
+echo "PATH=$PATH:$NODE_HOME/bin" >> ~/.profile
 
 echo "MONGO_HOME=/datadrive/mongodb-linux-x86_64-ubuntu1604-4.2.8"
-echo "MONGO_HOME=/datadrive/mongodb-linux-x86_64-ubuntu1604-4.2.8" >> ~/.bashrc
+echo "MONGO_HOME=/datadrive/mongodb-linux-x86_64-ubuntu1604-4.2.8" >> ~/.profile
 
 echo "PATH=$PATH:$MONGO_HOME/bin"
-echo "PATH=$PATH:$MONGO_HOME/bin" >> ~/.bashrc
+echo "PATH=$PATH:$MONGO_HOME/bin" >> ~/.profile
 
 echo "JAVA_HOME=/datadrive/jdk1.8.0_144"
-echo "JAVA_HOME=/datadrive/jdk1.8.0_144" >> ~/.bashrc
+echo "JAVA_HOME=/datadrive/jdk1.8.0_144" >> ~/.profile
 
 echo "PATH=$PATH:$JAVA_HOME/bin/"
-echo "PATH=$PATH:$JAVA_HOME/bin/" >> ~/.bashrc
+echo "PATH=$PATH:$JAVA_HOME/bin/" >> ~/.profile
 
 echo "KAFKA_HOME=/datadrive/kafka_2.12-2.6.0"
-echo "KAFKA_HOME=/datadrive/kafka_2.12-2.6.0" >> ~/.bashrc
+echo "KAFKA_HOME=/datadrive/kafka_2.12-2.6.0" >> ~/.profile
 
 echo "PATH=$PATH:/datadrive/kafka_2.12-2.6.0/bin"
-echo "PATH=$PATH:/datadrive/kafka_2.12-2.6.0/bin" >> ~/.bashrc
+echo "PATH=$PATH:/datadrive/kafka_2.12-2.6.0/bin" >> ~/.profile
 
 sleep 3
 
-source ~/.bashrc
+source ~/.profile
 
 sleep 3
 
